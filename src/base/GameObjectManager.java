@@ -2,6 +2,7 @@ package base;
 
 import knife.Knife;
 import physic.BoxCollider;
+import physic.PhysicBody;
 import wood.Wood;
 
 import java.awt.*;
@@ -41,5 +42,16 @@ public class GameObjectManager {
                 .orElse(null);
     }
 
+    public <T extends GameObject & PhysicBody> T checkCollision(BoxCollider boxCollider, Class<T> cls){
+        return (T) this.list
+                .stream()
+                .filter(gameObject -> cls.isInstance(gameObject))
+                .filter(gameObject -> {
+                    BoxCollider other = ((T) gameObject).getBoxCollider();
+                    return boxCollider.checkCollision(other);
+                })
+                .findFirst()
+                .orElse(null);
+    }
 
 }
